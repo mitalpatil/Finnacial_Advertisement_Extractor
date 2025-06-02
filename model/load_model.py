@@ -1,3 +1,4 @@
+
 import os
 import torch
 import torch.nn.functional as F
@@ -16,6 +17,7 @@ model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME)
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 
 # --- Step 1: Classify if text is an advertisement ---
+
 def classify_ad(text: str) -> int:
     inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True)
     with torch.no_grad():
