@@ -1,54 +1,13 @@
-# Byte-compiled / optimized / DLL files
+
 __pycache__/
-*.py[cod]
+*.pyc
 *.pyo
 *.pyd
-*.so
-
-# Virtual environment
+*.db
 .env
-venv/
-.venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Environment variables
-*.env
-
-# PyInstaller
-*.spec
-
-# Logs and output
-*.log
-*.out
-*.bak
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# IDE files
-.vscode/
-.idea/
-
-# Flask/Streamlit output folders
-static/
-outputs/
-
-# Excel files
-*.xlsx
-
-# Uploaded/temporary files
 *.jpg
-*.jpeg
 *.png
-temp_*
+outputs/*.xlsx
+static/temp_img.jpg
+temp_img.jpg
 
-# Python packaging
-*.egg-info/
-build/
-dist/
-
-# Misc
-*.tmp
