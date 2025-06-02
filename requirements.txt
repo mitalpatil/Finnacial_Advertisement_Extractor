@@ -1,0 +1,11 @@
+flask
+streamlit
+opencv-python
+pytesseract
+torch
+transformers
+python-dotenv
+pandas
+openai
+requests
+Pillow
