@@ -2,7 +2,7 @@
 
 **Automate the extraction of financial ads from scanned newspaper pages using Computer Vision, OCR, and Large Language Models (LLMs).**
 
-![App Screenshot](trail.png)
+![App Screenshot](ss.jpg)
 
 ---
 
