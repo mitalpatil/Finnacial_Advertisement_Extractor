@@ -3,7 +3,7 @@ import os
 import pandas as pd
 from datetime import datetime
 from ocr_utils import extract_text_blocks
-from model.load_model import is_financial_ad  # ✅ Updated import
+from model.load_model import is_financial_ad  
 
 app = Flask(__name__)
 UPLOAD_FOLDER = "static"
@@ -21,7 +21,7 @@ def upload_file():
     results = []
 
     for block in blocks:
-        if is_financial_ad(block['text']):  # ✅ Updated logic
+        if is_financial_ad(block['text']): 
             results.append({
                 "Block ID": block['block_id'],
                 "Text": block['text'],
