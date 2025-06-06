@@ -1,6 +1,6 @@
 # 📰 Financial Advertisement Extractor
 
-**Automate the extraction of financial ads from scanned newspaper pages using Computer Vision, OCR, and Large Language Models (LLMs).**
+**Automated system to extract financial ads from scanned newspaper pages using Computer Vision (CV), CNN, OCR, BERT, and LLMs.**
 
 ![App Screenshot](ss.png)
 
@@ -8,56 +8,88 @@
 
 ## 🚀 Project Overview
 
-This project aims to detect and extract **financial advertisements** from newspaper images. It combines **OpenCV** for image preprocessing, **OCR** for text extraction, and **LLMs** (like GPT-4 or Hugging Face models) for financial ad classification.
+This project identifies and extracts **financial advertisements** from scanned or digital newspaper images using a hybrid AI pipeline that integrates:
 
-### 🔍 Key Features
+- A **CNN-based block classifier** trained on real labeled ad data,
+- **OCR (PyTesseract/EasyOCR)** for text extraction,
+- A **BERT-based classifier** for initial filtering,
+- A **LLM (LLaMA 3 / GPT-4)** for final validation of financial context.
 
-- Detects text blocks using OpenCV
-- Extracts text using PyTesseract or EasyOCR
-- Classifies blocks using LLMs (GPT-4, Llama 3, or Hugging Face)
-- Exports detected financial ads to Excel
+Extracted financial ads are saved in **Excel** format for further business analysis or regulatory use.
+
+---
+
+## 🔍 Key Features
+
+- ✅ Detects ad regions using a custom-trained **CNN model**
+- ✅ Preprocesses and segments pages using **OpenCV**
+- ✅ Extracts text from detected regions via **OCR**
+- ✅ Classifies content using **BERT + LLM fallback**
+- ✅ Saves outputs (UUID, text, page number, date) to Excel
+
+---
+
+## 🧠 Model Training (CNN)
+
+- 🔬 A **Convolutional Neural Network (ResNet18)** was trained on **50+ manually labeled ad images**.
+- 📂 Dataset included financial and non-financial ad blocks cropped from real newspaper scans.
+- 🔎 The trained model (`cnn_ad_classifier.pth`) predicts whether a detected image block is a potential advertisement.
+- 🎯 Acts as the **first filter** in the extraction pipeline, minimizing OCR and LLM load.
 
 ---
 ## 🖼️ System Architecture
 ```
-Newspaper Image
+Newspaper Image (JPG/PNG/PDF)
 │
 ▼
-Image Preprocessing (OpenCV)
+1️⃣ Image Preprocessing (OpenCV: grayscale, thresholding)
 │
 ▼
-Block Detection & OCR (PyTesseract / EasyOCR)
+2️⃣ Block Detection (Contour Detection)
 │
 ▼
-Financial Ad Classification (LLM)
+3️⃣ Ad Classification (CNN)
+│ ├─→ Non-Ad → Discard
+│ └─→ Potential Ad
 │
 ▼
-Excel Storage (Pandas)
+4️⃣ OCR (PyTesseract / EasyOCR)
+│
+▼
+5️⃣ Text Classification
+├─ BERT Model → (financial?)
+└─ If unsure, fallback to LLM (LLaMA 3 / GPT-4)
+│
+▼
+6️⃣ Excel Export (UUID, Page, Date, Ad Text)
 ```
+
+---
 
 ---
 
 ## 🧪 Tech Stack
 
-| Component        | Technology                     |
-|------------------|---------------------------------|
-| Image Processing | OpenCV, PIL                     |
-| OCR              | PyTesseract, EasyOCR            |
-| LLM              | GPT-4 / Llama 3 / Hugging Face  |
-| Data Storage     | Pandas, Excel                   |
-| Frontend         | Streamlit                       |
-| Backend          | Flask                           |
-| Language         | Python                          |
+| Component        | Technology                                |
+|------------------|--------------------------------------------|
+| Block Detection  | OpenCV, PIL                                |
+| CNN Model        | PyTorch, ResNet18                          |
+| OCR              | PyTesseract, EasyOCR                       |
+| Text Classifier  | BERT (`bondarchukb/bert-ads-classification`) |
+| LLM Validator    | LLaMA 3 (via Groq) / GPT-4                 |
+| Data Export      | Pandas, Excel                              |
+| Frontend         | Streamlit                                  |
+| Backend          | Flask                                      |
+| Language         | Python                                     |
 
 ---
 
-## 🧰 Setup Instructions
+## ⚙️ Setup Instructions
 
 ### 1. 🐍 Install Dependencies
-
 ```bash
 pip install -r requirements.txt
- ````
+````
 
 ### 2. 🚦 Run Backend API (Flask)
 
