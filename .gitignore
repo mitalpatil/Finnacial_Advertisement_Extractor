@@ -5,10 +5,8 @@ __pycache__/
 *.pyd
 *.db
 .env
-*.jpg
-*.png
-output/*.xlsx
-static/temp_img.jpg
+
+
 temp_img.jpg
 
 # Model files
