@@ -1,11 +1,7 @@
-flask
 streamlit
 opencv-python
+tensorflow
+flask
 pytesseract
-torch
-transformers
-python-dotenv
 pandas
-openai
 requests
-Pillow

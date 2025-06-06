@@ -1,39 +1,38 @@
 from flask import Flask, request, jsonify, send_file
 import os
-import pandas as pd
-from datetime import datetime
-from ocr_utils import extract_text_blocks
-from model.load_model import is_financial_ad  
+from ad_detector import analyze_image_and_classify_blocks
 
 app = Flask(__name__)
-UPLOAD_FOLDER = "static"
-OUTPUT_FOLDER = "outputs"
+UPLOAD_FOLDER = "static/uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
-@app.route('/upload', methods=['POST'])
-def upload_file():
-    file = request.files['image']
-    image_path = os.path.join(UPLOAD_FOLDER, file.filename)
-    file.save(image_path)
+@app.route("/analyze", methods=["POST"])
+def analyze():
+    if "image" not in request.files:
+        return jsonify({"error": "No image uploaded"}), 400
 
-    blocks, _ = extract_text_blocks(image_path)
-    results = []
+    image = request.files["image"]
+    if image.filename == "":
+        return jsonify({"error": "Empty filename"}), 400
 
-    for block in blocks:
-        if is_financial_ad(block['text']): 
-            results.append({
-                "Block ID": block['block_id'],
-                "Text": block['text'],
-                "Page Number": 1,
-                "Date": datetime.today().strftime('%Y-%m-%d')
-            })
+    image_path = os.path.join(UPLOAD_FOLDER, image.filename)
+    image.save(image_path)
 
-    df = pd.DataFrame(results)
-    output_path = os.path.join(OUTPUT_FOLDER, 'financial_ads_output.xlsx')
-    df.to_excel(output_path, index=False)
+    try:
+        result_image, excel_file = analyze_image_and_classify_blocks(image_path)
+        return jsonify({
+            "result_image": f"http://127.0.0.1:5000/download/{result_image}",
+            "excel_file": f"http://127.0.0.1:5000/download/{excel_file}"
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
-    return send_file(output_path, as_attachment=True)
+@app.route("/download/<path:filename>")
+def download_file(filename):
+    try:
+        return send_file(os.path.join(os.getcwd(), filename), as_attachment=False)
+    except FileNotFoundError:
+        return jsonify({"error": "File not found"}), 404
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
